@@ -76,9 +76,7 @@ class _DeviceCardState extends State<DeviceCard> {
             elevation: 20,
             child: InkWell(
                 borderRadius: BorderRadius.circular(30),
-                onTap: () {
-                  print("Tapped");
-                },
+                onTap: () {},
                 child: Padding(
                     padding: const EdgeInsets.all(20),
                     child: Row(mainAxisSize: MainAxisSize.min, children: [

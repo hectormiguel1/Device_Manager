@@ -37,12 +37,17 @@ class Device {
   String getOsVer() => osVer;
   DeviceType getDeviceType() => deviceType;
 
-  void setOSString(String osString) {
-    osVer = osString;
-  }
-
-  void setPatchLevelString(String patchLevel) {
-    patchLevelString = patchLevel;
+  @override
+  bool operator ==(Object other) {
+    if (other is Device) {
+      if (this.serial == other.serial) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
   }
 
   @override

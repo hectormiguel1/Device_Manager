@@ -1,21 +1,13 @@
 import 'package:device_manager/Backend/device.dart';
+import 'package:device_manager/UI/expanded_view.dart';
 import 'package:flutter/material.dart';
 
-class DeviceCard extends StatefulWidget {
-  final Device? _device;
-  DeviceCard(this._device);
-
-  _DeviceCardState createState() => _DeviceCardState(_device!);
-}
-
-class _DeviceCardState extends State<DeviceCard> {
+class DeviceCard extends StatelessWidget {
   final Device _device;
 
-  _DeviceCardState(this._device);
+  DeviceCard(this._device);
 
-  Widget drawSection(
-    String section,
-  ) {
+  Widget drawSection(String section, Device device) {
     return SizedBox(
         height: 20,
         width: 250,
@@ -31,7 +23,7 @@ class _DeviceCardState extends State<DeviceCard> {
               width: 20,
             ),
             Text(
-              sectionToData(section),
+              sectionToData(section, device),
               style: TextStyle(
                 color: Colors.black,
               ),
@@ -41,24 +33,24 @@ class _DeviceCardState extends State<DeviceCard> {
         ));
   }
 
-  String sectionToData(String section) {
+  String sectionToData(String section, Device device) {
     switch (section) {
       case 'Name':
-        return _device.name;
+        return device.name;
       case 'Model':
-        return _device.model;
+        return device.model;
       case 'Serial':
-        return _device.serial;
+        return device.serial;
       case 'OS Version':
-        return _device.osVer;
+        return device.osVer;
       case 'Patch Level':
-        return _device.patchLevelString;
+        return device.patchLevelString;
       case 'Type':
-        return _device.deviceType.toString();
+        return device.deviceType.toString();
       case 'Status':
-        return _device.status;
+        return device.status;
       case 'Authorized':
-        return _device.authorized.toString();
+        return device.authorized.toString();
       default:
         return "";
     }
@@ -67,34 +59,36 @@ class _DeviceCardState extends State<DeviceCard> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        key: UniqueKey(),
-        padding: const EdgeInsets.all(20),
-        child: Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-            margin: const EdgeInsets.all(20),
-            elevation: 20,
-            child: InkWell(
-                borderRadius: BorderRadius.circular(30),
-                onTap: () {},
-                child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Row(mainAxisSize: MainAxisSize.min, children: [
-                      Stack(children: [
-                        Icon(Icons.smartphone, size: 150),
-                        Positioned.fill(
-                            child: Align(
-                                alignment: Alignment.center,
-                                child: _device.authorized
-                                    ? Icon(Icons.check_circle,
-                                        color: Colors.green, size: 50)
-                                    : Icon(Icons.cancel,
-                                        color: Colors.red, size: 50)))
-                      ]),
-                      Column(
-                          children: Device.sections
-                              .map((section) => drawSection(section))
-                              .toList())
-                    ])))));
+      key: UniqueKey(),
+      padding: const EdgeInsets.all(20),
+      child: Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          margin: const EdgeInsets.all(20),
+          elevation: 20,
+          child: InkWell(
+              borderRadius: BorderRadius.circular(30),
+              onTap: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => ExpandedView(_device))),
+              child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Row(mainAxisSize: MainAxisSize.min, children: [
+                    Stack(children: [
+                      Icon(Icons.smartphone, size: 150),
+                      Positioned.fill(
+                          child: Align(
+                              alignment: Alignment.center,
+                              child: _device.authorized
+                                  ? Icon(Icons.check_circle,
+                                      color: Colors.green, size: 50)
+                                  : Icon(Icons.cancel,
+                                      color: Colors.red, size: 50)))
+                    ]),
+                    Column(
+                        children: Device.sections
+                            .map((section) => drawSection(section, _device))
+                            .toList())
+                  ])))),
+    );
   }
 }
